@@ -11,7 +11,7 @@ package main
 //	client  LOGIN_AUTHENTICATE_SWITCH (131)    String, UnsignedInt n, n bytes: the Nintendo id
 //	                                           token XORed with the challenge (GameUtil::EncryptString,
 //	                                           key[(offset+i) % len(key)]), UnsignedInt 26, checksum info
-//	server  BEGIN_LOBBY (2431) ...
+//	server  BEGIN_LOBBY (2431)                 see lobby.go
 //
 // The challenge is one repeated character, so the XOR does not depend on the
 // offset the client starts the key at.
@@ -155,7 +155,7 @@ func (u *userConn) login(r *netlib.Reader) error {
 	}
 	u.player = p
 	log.Printf("[user %s] signed in as %s", u.tag, redact.Tag(p.PID))
-	return nil // BEGIN_LOBBY next: see docs/protocol.md
+	return u.send(beginLobby(newLobbyState(p)))
 }
 
 // dump writes a packet to -dump-dir (development only). The login packet carries
