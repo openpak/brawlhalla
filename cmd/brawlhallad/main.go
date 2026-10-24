@@ -30,6 +30,7 @@ var (
 	userAddr   = flag.String("user-addr", ":22690", "user server TCP listen address")
 	healthAddr = flag.String("health-addr", ":22692", "health listen address")
 	dumpDir    = flag.String("dump-dir", "", "development only: write every packet but the login's to this directory")
+	devTrust   = flag.Bool("dev-trust-tokens", false, "development only: accept any login token without asking nx-baas")
 )
 
 func main() {

@@ -142,7 +142,13 @@ func (u *userConn) login(r *netlib.Reader) error {
 	}
 	log.Printf("[user %s] switch login: first string %d bytes, token %d bytes, then %d, %d bits of checksum info",
 		u.tag, len(first), len(tok), after, r.Remaining())
-	p, err := u.srv.ids.byIDToken(string(tok))
+	var p *player
+	var err error
+	if *devTrust {
+		p = &player{PID: devPID(tok), Nickname: first}
+	} else {
+		p, err = u.srv.ids.byIDToken(string(tok))
+	}
 	if err != nil {
 		log.Printf("[user %s] login refused: %s", u.tag, redact.Err(err))
 		return u.send(netlib.New(netlib.SwitchNoAuth).Finish())
@@ -160,4 +166,13 @@ func (u *userConn) dump(dir string, p *netlib.Packet) {
 	}
 	name := fmt.Sprintf("%d-%s-%d-%s.bin", u.n, time.Now().Format("150405.000"), p.Type, dir)
 	os.WriteFile(filepath.Join(*dumpDir, name), p.Payload, 0o600)
+}
+
+// devPID stands in for nx-baas when -dev-trust-tokens is set: a stable id per token.
+func devPID(tok []byte) uint64 {
+	var h uint64 = 14695981039346656037
+	for _, b := range tok {
+		h = (h ^ uint64(b)) * 1099511628211
+	}
+	return h
 }
