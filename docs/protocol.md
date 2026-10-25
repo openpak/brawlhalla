@@ -62,3 +62,21 @@ The packet carries one bool per entry of the client's region table, which the cl
 its own data files, so the server has to send exactly that many (`-regions`, 9 by default).
 The client divides by (level-end XP - level-start XP), so the two must differ, and an age byte
 of 0 can open the age prompt. The full order is in `cmd/brawlhallad/lobby.go`.
+
+## From the previous README
+
+The services the Switch build of Brawlhalla (`0100C6800B934000`, update 10.11) reaches when a
+console is redirected to OpenPak.
+
+Brawlhalla talks to three servers of Blue Mammoth's own, all in its own packet format (`netlib/`):
+
+| Server | Transport | What it does |
+| --- | --- | --- |
+| user server | TCP | login, lobby, profile and inventory, matchmaking, custom rooms |
+| game server | UDP, TCP fallback | a match's input relay (the clients simulate the match themselves, with rollback) |
+| spectate server | UDP/TCP | spectators |
+
+The game dials the user server by a **hard-coded IPv4 address**, not a name, so DNS redirection
+cannot reach it. Consoles and Harbor get there through a signed ip redirect: the ceiling's
+`ip_redirects` section, applied by Harbor's `bsd` service and by the `bsd:u` MITM in OpenPak's boot
+package. The user server sends the game server's and spectate server's addresses itself.
