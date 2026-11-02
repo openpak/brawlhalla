@@ -36,7 +36,6 @@ go run ./cmd/brawlhallad -user-addr :22690 -health-addr :22692
 
 - [Protocol](docs/protocol.md)
 - [Deploy](docs/deploy.md)
-- [Notes](docs/notes.md)
 
 Live compatibility status: [openpak.org/titles#t-64](https://openpak.org/titles#t-64).
 
