@@ -35,7 +35,6 @@ go run ./cmd/brawlhallad -user-addr :22690 -health-addr :22692
 ## Docs
 
 - [Protocol](docs/protocol.md)
-- [Evidence](docs/evidence.md)
 - [Deploy](docs/deploy.md)
 - [Notes](docs/notes.md)
 
